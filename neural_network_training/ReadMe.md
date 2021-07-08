@@ -1,5 +1,5 @@
-#Run dlbac_alpha_resnet.py
-This file contain all the source code related to the DLBAC_alpha ResNet.
+dlbac_alpha_resnet.py file contain all the source code related to the DLBAC_alpha ResNet.
+
 This python script takes two parameters- train and test file in following order.
 
 python3 dlbac_alpha_resnet.py <train_data_file_path> <test_data_file_path>
