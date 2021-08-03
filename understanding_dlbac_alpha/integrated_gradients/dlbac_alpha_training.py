@@ -244,7 +244,7 @@ def data_parser(data_config):
         print(train_urp[0])
         print(train_operations[0])
 
-    ############### ENCODING ##############
+    #OneHotEncoding
     train_urp = to_categorical(train_urp)
     if debug:
         print('shape of Train-URP after encoding')
@@ -254,7 +254,6 @@ def data_parser(data_config):
     if debug:
         print('shape of Test-URP after encoding')
         print(test_urp.shape)
-    ############### End of Encoding #######
 
     x_train = train_urp
     x_test = test_urp
