@@ -49,7 +49,7 @@ There are also three other optional parameters.
 --index (type: int. Index of sample in the dataset, default value is 1). For the simplicity we take index of the sample as the input, which equivalent to taking both uid of a user and rid a resource as input. Based on the index, internally system determines uid and rid. Then, it retrieves their access to the corresoponding operation.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 local_interpretation.py --dataset dataset/train_UR_0_4500_4500.sample --index 1
+For example, python3 local_interpretation.py --dataset dataset/train_u4k-r4k-auth11k.sample --index 1
 
 
 ### Output ###
@@ -71,10 +71,34 @@ There are also three other optional parameters.
 --batch_size (type: int. The size of batch, default value is 50). We experimented for maximum batch size of 50.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 global_interpretation.py --data dataset/train_UR_0_4500_4500.sample --batch_size 20
+For example, python3 global_interpretation.py --data dataset/train_u4k-r4k-auth11k.sample --batch_size 20
 
 
 ### Output ###
 The script outputs attribution information for corresponding batch.  
 The output file will be exported in the result/global_interpret_result.txt file.
 
+
+## _Application of Global Interpretation_ ##
+
+This experimentation also works based on a trained DLBAC_alpha network. For simplicity, we assume the trained network is stored in /result directory.
+
+application_global_interpretation.py file contain all the source code related to global interpretation application experimentation (to see the impact of changing metadata values).  
+
+This python script has a required parameters. --data (dataset file path). For this experiment, we split our train_u4k-r4k-auth11k.sample file into two different files based on the op1 access information. We create train_u4k-r4k-auth11k_grant.sample that contain all the samples with grant access on op1 operation. Rest of the samples, we keep in train_u4k-r4k-auth11k_deny.sample file. Essentially, this **train_u4k-r4k-auth11k_deny.sample** is the input to the script. We provide both files in **dataset/u4k-r4k-auth11k/** directory.  
+
+For changed value, we randomly select a tuple (uid:4246, rid:4435) with grant access on op1 and apply its corresponding metadata values.  
+
+There are also two other optional parameters.  
+--depth (type: int. Determine the layers of the ResNet network, default value is 8. The depth of the network has to be same as the stored network).  
+--debug (type: bool. Display the detailed logs, default False).  
+
+For example, python3 application_global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
+
+
+### Output ###
+We evaluate for all the samples in train_u4k-r4k-auth11k_deny.sample.
+As all the samples (tuples) in train_u4k-r4k-auth11k_deny.sample datasets are with _deny_ access. Ideally, without any change, the accuracy should be as close as 100%. However, with the evolution of a different number of metadata values, this accuracy decreases, indicating the tuples are receiving grant access.  
+As such, we measure what percentage of tuples still have _deny_ access. We also measure what percentage of tuples are receiving _**grant**_ access with the change of their metadata values.
+
+The output file will be exported in the result/application_global_interpret_result.txt file.
