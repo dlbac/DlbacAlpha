@@ -198,6 +198,7 @@ def data_parser(data_config, no_of_changed_meta):
     if debug:
         print('Number of Changed Metadata: %d' % (no_of_changed_meta))
 
+# for the changed value, we randomly select a tuple (uid:4246, rid:4435) with grant access on op1
     if no_of_changed_meta == 1:
         test_urp[:, 10] =  5
     elif no_of_changed_meta == 2:
