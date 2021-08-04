@@ -50,8 +50,7 @@ def str2bool(s):
 def parse_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--train_data', type=str, required=True)
-    parser.add_argument('--test_data', type=str, required=True)
+    parser.add_argument('--data', type=str, required=True)
     parser.add_argument('--depth', type=int, default=8)
     parser.add_argument('--batch_size', type=int, default=50)
     parser.add_argument('--debug', type=str2bool, default=False)
@@ -77,8 +76,8 @@ def parse_args():
     ])
 
     data_config = OrderedDict([
-        ('train_data', args.train_data),
-        ('test_data', args.test_data),
+        ('train_data', args.data),
+        ('test_data', args.data),
     ])
 
     run_config = OrderedDict([
