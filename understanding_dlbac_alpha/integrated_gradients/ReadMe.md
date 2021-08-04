@@ -1,3 +1,5 @@
+_For IngratedGradients experiments, we used **captum** library. The library works only for the models implemented in **pytorch**. Also, we provide understanding for a specific operation. E.g. Alice has op1 access on projectA resource. Hence, to keep it simple, we implement DLBAC_alpha for a single operation (as opposed to four operation in our DLBAC_alpha network experimentation section) using pytorch that is compatible with captum library._
+
 ## Dependent Libraries ##
   * python 3.8 (experimented with version 3.8.10)
   * Pytorch 1.5.0
@@ -7,7 +9,9 @@
 
 # Run #
 ## Model Training ##
-resnet.py file contain all the source code related to ResNet.
+_We implement a DLBAC_alpha in pytorch for Op1 operation. We only need to train DLBAC_alpha once. The same trained network can be used for both local and global interpretation. _
+
+resnet.py file contain pytorch implementation of ResNet.
 dataloader.py is the utility file for processing data.
 
 
