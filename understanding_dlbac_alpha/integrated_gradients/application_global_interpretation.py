@@ -22,11 +22,11 @@ import torchvision.utils
 from dataloader import get_loader
 
 from numpy import loadtxt
-from tensorflow.python.keras.utils import to_categorical
+#from tensorflow.python.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 
 from os import path
 
-from captum.attr import IntegratedGradients
 
 logging.basicConfig(
     format='[%(asctime)s %(name)s %(levelname)s] - %(message)s',
@@ -52,7 +52,6 @@ def parse_args():
 
     parser.add_argument('--data', type=str, required=True)
     parser.add_argument('--depth', type=int, default=8)
-    parser.add_argument('--index', type=int, default=1)
     parser.add_argument('--debug', type=str2bool, default=False)
 
     args = parser.parse_args()
@@ -78,7 +77,6 @@ def parse_args():
     data_config = OrderedDict([
         ('train_data', args.data),
         ('test_data', args.data),
-        ('sample_index', args.index),
     ])
 
     run_config = OrderedDict([
@@ -121,7 +119,9 @@ class AverageMeter(object):
 
 
 def test(epoch, model, criterion, test_loader, run_config):
-    logger.info('Test {}'.format(epoch))
+    
+    if debug:
+        logger.info('Test {}'.format(epoch))
     model = model.float()
     model.eval()
 
@@ -146,16 +146,18 @@ def test(epoch, model, criterion, test_loader, run_config):
 
     accuracy = correct_meter.sum / len(test_loader.dataset)
 
-    logger.info('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(
+    if debug:
+        logger.info('Epoch {} Loss {:.4f} Accuracy {:.4f}'.format(
         epoch, loss_meter.avg, accuracy))
 
     elapsed = time.time() - start
-    logger.info('Elapsed {:.2f}'.format(elapsed))
+    if debug:
+        logger.info('Elapsed {:.2f}'.format(elapsed))
 
     return accuracy
 
 
-def data_parser(data_config):
+def data_parser(data_config, no_of_changed_meta):
     id_count = 2 # uid and rid
     ops_count = 1 # we experiment this for 1 operation
     metadata_count = 8 #in our experiment dataset (u4k-r4k-auth11k), each user/ resource has eight metadata
@@ -166,7 +168,7 @@ def data_parser(data_config):
     cols = id_count + (metadata_count * 2) + ops_count # <uid rid><8 user-meta and 8 resource-meta><1 ops>
 
     # load the training dataset
-    train_raw_dataset = loadtxt(trainDataFileName, delimiter=' ', dtype=np.str)
+    train_raw_dataset = loadtxt(trainDataFileName, delimiter=' ', dtype=str)
     train_dataset = train_raw_dataset[:,2:cols] # TO SKIP UID RID
 
     np.random.shuffle(train_dataset)
@@ -181,18 +183,55 @@ def data_parser(data_config):
     train_operations = train_operations.astype('float16')
 
     # load the testing dataset
-    test_raw_dataset = loadtxt(testDataFileName, delimiter=' ', dtype=np.str)
+    test_raw_dataset = loadtxt(testDataFileName, delimiter=' ', dtype=str)
     test_dataset = test_raw_dataset[:,2:cols] # TO SKIP UID RID
 
-    np.random.shuffle(test_dataset)
+    #np.random.shuffle(test_dataset)
 
     test_urp = test_dataset[:,0:metadata]
+    
+    if debug:
+        print('metadata value of first sample before replacing metadata value')
+        print(test_urp[0])
+    
+    #modify test_data to replace metadata values with significant one
+    if debug:
+        print('Number of Changed Metadata: %d' % (no_of_changed_meta))
+
+    if no_of_changed_meta == 1:
+        test_urp[:, 10] =  5
+    elif no_of_changed_meta == 2:
+        test_urp[:, 10] =  5
+        test_urp[:, 2] =  5
+    elif no_of_changed_meta == 3:
+        test_urp[:, 10] =  5
+        test_urp[:, 2] =  5
+        test_urp[:, 4] =  44
+    elif no_of_changed_meta == 4:
+        test_urp[:, 10] =  5
+        test_urp[:, 2] =  5
+        test_urp[:, 4] =  44
+        test_urp[:, 1] =  84
+    elif no_of_changed_meta == 5:
+        test_urp[:, 10] =  5
+        test_urp[:, 2] =  5
+        test_urp[:, 4] =  44
+        test_urp[:, 1] =  84
+        test_urp[:, 8] =  30
+    elif no_of_changed_meta == 6:
+        test_urp[:, 10] =  5
+        test_urp[:, 2] =  5
+        test_urp[:, 4] =  44
+        test_urp[:, 1] =  84
+        test_urp[:, 8] =  30
+        test_urp[:, 13] =  105 #tuples started loosing access again at this stage
+    
+    if debug:
+        print('metadata value of first sample after replacing metadata value')
+        print(test_urp[0])
+
     test_operations = test_dataset[:,metadata:feature]
     test_operations = test_operations.astype('float16')
-
-    if debug:
-        print(train_urp[0])
-        print(train_operations[0])
 
     ############### ENCODING ##############
     train_urp = to_categorical(train_urp)
@@ -262,115 +301,57 @@ def main():
     with open(outpath, 'w') as fout:
         json.dump(config, fout, indent=2)
 
-    x_train, x_test, y_train, y_test = data_parser(data_config)
-    if debug:
-        print('x_train shape after return:', x_train.shape)
-        print('y_train shape after return:', y_train.shape)
-   
-    model_config = config['model_config']
-    if debug:
-        print('before assigning, default input shape', model_config['input_shape'])
-    
-    input_shape = x_train[0].reshape((1,1,)+x_train[0].shape)
-    model_config['input_shape'] = input_shape.shape
-    if debug:
-        print('model config input shape', model_config['input_shape'])
+    max_metadata_change = 7
 
-    train_loader, test_loader = get_loader(optim_config['batch_size'],
+    result_file_path = os.path.join(outdir, 'application_global_interpret_result.txt')
+    result_file = open(result_file_path, 'w+')
+
+    for no_of_changed_meta in range(max_metadata_change):
+        if debug:
+            print('Number of Changed Metadata: %d' % (no_of_changed_meta))
+        result_file.write('Number of Changed Metadata: %d \n' % (no_of_changed_meta))
+        
+        x_train, x_test, y_train, y_test = data_parser(data_config, no_of_changed_meta)
+        if debug:
+            print('x_train shape after return:', x_train.shape)
+            print('y_train shape after return:', y_train.shape)
+   
+        model_config = config['model_config']
+        if debug:
+            print('before assigning, default input shape', model_config['input_shape'])
+    
+        input_shape = x_train[0].reshape((1,1,)+x_train[0].shape)
+        model_config['input_shape'] = input_shape.shape
+        if debug:
+            print('model config input shape', model_config['input_shape'])
+
+        # there is no use of train_loader 
+        train_loader, test_loader = get_loader(optim_config['batch_size'],
                                            x_train, x_test, y_train, y_test)
 
-    if debug:
-        print('train_loader len', len(train_loader), 'test_loader', len(test_loader))
+        if debug:
+            print('train_loader len', len(train_loader), 'test_loader', len(test_loader))
     
-    model = load_model(config['model_config'])
-    n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
-    logger.info('n_params: {}'.format(n_params))
+        model = load_model(config['model_config'])
+        n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
+        if debug:
+            logger.info('n_params: {}'.format(n_params))
 
-    criterion = nn.CrossEntropyLoss(size_average=True)
+        criterion = nn.CrossEntropyLoss(size_average=True)
 
-    # optimizer
-    optimizer = torch.optim.Adam(
-        model.parameters(),
-        lr=optim_config['base_lr'])
-    
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(
-        optimizer,
-        milestones=optim_config['milestones'],
-        gamma=optim_config['lr_decay'])
-    
-    model_path = os.path.join(outdir, 'model_state.pth')
-    train_load_save_model(model, model_path)
-    model.eval()
+    	# evaluate the performance
+        model_path = os.path.join(outdir, 'model_state.pth')
+        train_load_save_model(model, model_path)
+        model.eval()
+        accuracy = test(1, model, criterion, test_loader, run_config)
+        if debug:
+            print('Percentage of tuples with deny access: %f' % (accuracy * 100))
+            print('Percentage of tuples receiving grant access: %f' % ((1-accuracy) * 100))
+        result_file.write('Current percentage of tuples with deny access: %f \n' % (accuracy * 100))
+        result_file.write('Percentage of tuples receiving grant access: %f \n\n' % ((1-accuracy) * 100))
 
-    # as interpretation experiment is not related to training, we
-    # create both train_loader and test_loader to keep overall code reusable.
-    # Here, both train_loader and test_loader contain same data (we take only one dataset as input). 
-    # We experimented with samples from training dataset set.
-    dataloader_iterator = iter(train_loader)
-
-    integrated_gradients = IntegratedGradients(model)
-
-    features = 16 #number of user and resource metadata
-    aig = np.zeros(shape=(1,features))
-    
-    testdata, targets = next(dataloader_iterator)
-    samples = len(testdata)
-    
-    sample_index = data_config['sample_index']
-    
-    # adding a dummy shape(for batch size) as there is only one sample as input
-    input_data = testdata[sample_index].reshape((1,)+testdata[sample_index].shape)
-    
-    outputs = model(input_data.float())
-    if debug:
-        print('outputs:', outputs)
-    prediction_score, pred_label_idx = torch.topk(outputs, 1)
-    if debug:
-        print('prediction_score:', prediction_score, ' pred_label:', pred_label_idx)
-    
-    attributions_ig = integrated_gradients.attribute(input_data.float(), target=pred_label_idx, n_steps=100)
-    squz = attributions_ig.squeeze().cpu().detach().numpy()
-
-    rows = squz.shape[0]
-    cols = squz.shape[1]
-    
-    for row in range(rows):
-        for col in range(cols):
-            if squz[row][col] > 0:
-                aig[0][row] = squz[row][col]
-    
-    result_file_path = os.path.join(outdir, 'local_interpret_result.txt')
-    result_file = open(result_file_path, 'w+')
-    
-    result_file.write('Index of the sample for local interpretation:%d\n\n' % (sample_index))
-    
-    if debug:
-        print('\nRaw attribution information.\n')
-        print(aig[0])
-    
-    result_file.write('\nRaw attribution information.\n')
-    for meta in range(features):
-        if meta < 8:
-            result_file.write('umeta%d attribution: %s\n' % (meta, str(aig[0][meta])))
-        else:
-            result_file.write('rmeta%d attribution: %s\n' % (meta%8, str(aig[0][meta])))
-
-    ig_attr_test_sum = aig
-    ig_attr_test_norm_sum = ig_attr_test_sum / np.linalg.norm(ig_attr_test_sum, ord=1)
-    
-    if debug:
-        print('Normalized attribution information.')
-        print(ig_attr_test_norm_sum)
-    
-    result_file.write('\n\nNormalized attribution information.\n')
-    for meta in range(features):
-        if meta < 8:
-            result_file.write('umeta%d attribution: %s\n' % (meta, str(ig_attr_test_norm_sum[0][meta])))
-        else:
-            result_file.write('rmeta%d attribution: %s\n' % (meta%8, str(ig_attr_test_norm_sum[0][meta])))
-    
+    print('The outputs of global interpretation experiment are exported to: %s' % (result_file_path))
     result_file.close()
-    print('Attribution information exported to: %s' % (result_file_path))
 
 
 if __name__ == '__main__':

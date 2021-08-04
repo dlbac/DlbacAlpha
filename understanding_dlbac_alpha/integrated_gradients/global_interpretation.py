@@ -119,56 +119,6 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 
-def train(epoch, model, optimizer, criterion, train_loader, run_config):
-    global global_step
-
-    logger.info('Train {}'.format(epoch))
-
-    model = model.float()
-    model.train()
-
-    loss_meter = AverageMeter()
-    accuracy_meter = AverageMeter()
-    start = time.time()
-    for step, (data, targets) in enumerate(train_loader):
-        global_step += 1
-
-        optimizer.zero_grad()
-
-        outputs = model(data.float())
-        loss = criterion(outputs, targets)
-        
-        loss.backward()
-        optimizer.step()
-
-        _, preds = torch.max(outputs, dim=1)
-
-        loss_ = loss.item()
-        correct_ = preds.eq(targets).sum().item()
-        num = data.size(0)
-
-        accuracy = correct_ / num
-
-        loss_meter.update(loss_, num)
-        accuracy_meter.update(accuracy, num)
-
-        if step % 100 == 0:
-            logger.info('Epoch {} Step {}/{} '
-                        'Loss {:.4f} ({:.4f}) '
-                        'Accuracy {:.4f} ({:.4f})'.format(
-                            epoch,
-                            step,
-                            len(train_loader),
-                            loss_meter.val,
-                            loss_meter.avg,
-                            accuracy_meter.val,
-                            accuracy_meter.avg,
-                        ))
-
-    elapsed = time.time() - start
-    logger.info('Elapsed {:.2f}'.format(elapsed))
-
-
 def test(epoch, model, criterion, test_loader, run_config):
     logger.info('Test {}'.format(epoch))
     model = model.float()
@@ -351,6 +301,10 @@ def main():
     train_load_save_model(model, model_path)
     model.eval()
     
+    # as interpretation experiment is not related to training, we
+    # create both train_loader and test_loader to keep overall code reusable.
+    # Here, both train_loader and test_loader contain same data (we take only one dataset as input). 
+    # We experimented with samples from training dataset set.
     dataloader_iterator = iter(train_loader)
 
     integrated_gradients = IntegratedGradients(model)
