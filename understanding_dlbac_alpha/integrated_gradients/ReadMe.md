@@ -30,17 +30,17 @@ For example,
 python3 dlbac_alpha_training.py --train_data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/synthetic/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
 
 ### Output ###
-The **output** will be a *trained dlbac_alpha network* and saved in `result/model_state.pth` path.  
+The **output** will be a *trained dlbac_alpha network* and saved in `neural_network/dlbac_alpha.pth` path.  
 The system keeps track of all the configurations and stores them in a `result/config.json` file.  
 
 
 ## _Local Interpretation_ ##
 
-Local interpretation works based on a trained DLBAC_alpha network. For simplicity, we assume the trained network is stored in /result directory.
+Local interpretation works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
 
-local_interpretation.py file contains all the source code related to local interpretation (understanding decision of a single sample).
+`local_interpretation.py` file contains all the source code related to local interpretation (understanding decision of a single sample).
 
-This python script has the required parameters. --dataset (dataset file path).
+This python script has the required parameters. `--data` (dataset file path).
 
 There are also three other optional parameters.
 
@@ -48,7 +48,7 @@ There are also three other optional parameters.
 --index (type: int. The sample index in the dataset, the default value is 1). For simplicity, we take an index of the sample as the input, which is equivalent to taking both _uid_ of a user and _rid_ a resource as input. Based on the index, the internal system determines _uid_ and _rid_. Then, it retrieves their access to the corresponding operation.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 local_interpretation.py --dataset dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --index 1
+For example, python3 local_interpretation.py --data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --index 1
 
 
 ### Output ###
@@ -58,9 +58,9 @@ The output file will be exported in the result/local_interpret_result.txt file.
 
 ## _Global Interpretation_ ##
 
-Global interpretation also works based on a trained DLBAC_alpha network. For simplicity, we assume the trained network is stored in /result directory.
+Global interpretation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
 
-global_interpretation.py file includes all the source code related to global interpretation (understanding decision of a batch of samples together). We evaluated the global interpretation for a batch of a maximum of 50 samples.
+`global_interpretation.py` file includes all the source code related to global interpretation (understanding decision of a batch of samples together). We evaluated the global interpretation for a batch of a maximum of 50 samples.
 
 This python script has the required parameters. --data (dataset file path).
 
@@ -75,14 +75,14 @@ For example, python3 global_interpretation.py --data dataset/synthetic/u4k-r4k-a
 
 ### Output ###
 The script outputs attribution information for the corresponding batch.  
-The output file will be exported in the result/global_interpret_result.txt file.
+The output file will be exported in the `result/global_interpret_result.txt` file.
 
 
 ## _Application of Global Interpretation_ ##
 
-This experimentation also works based on a trained DLBAC_alpha network. For simplicity, we assume the trained network is stored in /result directory.
+This experimentation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
 
-application_global_interpretation.py file contains all the source code related to global interpretation application experimentation (to see the impact of changing metadata values).  
+`application_global_interpretation.py` file contains all the source code related to global interpretation application experimentation (to see the impact of changing metadata values).  
 
 This python script has the required parameters, --data (dataset file path). For this experiment, we split our train_u4k-r4k-auth11k.sample file into two different files based on the op1 access information. We create a train_u4k-r4k-auth11k_grant.sample that contains all the samples with grant access on op1 operation. For the rest of the samples, we create a train_u4k-r4k-auth11k_deny.sample file. Essentially, this **train_u4k-r4k-auth11k_deny.sample** is the input to the script. We provide both files in **dataset/synthetic/u4k-r4k-auth11k/** directory.  
 
@@ -100,4 +100,4 @@ We evaluate for all the samples in train_u4k-r4k-auth11k_deny.sample.
 As all the samples (tuples) in train_u4k-r4k-auth11k_deny.sample datasets are with _deny_ access. Ideally, without any change, the accuracy should be as close as 100%. However, with the evolution of a different number of metadata values, this accuracy decreases, indicating the tuples are receiving grant access.  
 As such, we measure what percentage of tuples still have _deny_ access. We also measure what percentage of tuples are receiving _**grant**_ access with the change of their metadata values.
 
-The output file will be exported in the result/application_global_interpret_result.txt file.
+The output file will be exported in the `result/application_global_interpret_result.txt` file.
