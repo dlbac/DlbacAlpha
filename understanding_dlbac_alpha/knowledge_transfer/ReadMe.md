@@ -8,7 +8,7 @@
 
   * IPython (experimented with version 7.26.0)
   * pydotplus (experimented with version 2.0.2)
-  * graphviz (required to install with _sudo apt-get install graphviz_)
+  * graphviz (required to install with commad _`sudo apt-get install graphviz`_)
 
 # Run #
 
