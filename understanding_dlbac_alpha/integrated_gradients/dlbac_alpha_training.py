@@ -84,6 +84,7 @@ def parse_args():
     run_config = OrderedDict([
         ('seed', 17),
         ('outdir', 'result'),
+        ('networkdir', 'neural_network'),
         ('debug', args.debug),
     ])
 
@@ -296,6 +297,11 @@ def main():
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
+    # create neural_network directory
+    networkdir = run_config['networkdir']
+    if not os.path.exists(networkdir):
+        os.makedirs(networkdir)
+
     # save config as json file in output directory
     outpath = os.path.join(outdir, 'config.json')
     with open(outpath, 'w') as fout:
@@ -352,7 +358,7 @@ def main():
             ('epoch', epoch),
             ('accuracy', accuracy),
         ])
-        model_path = os.path.join(outdir, 'model_state.pth')
+        model_path = os.path.join(networkdir, 'dlbac_alpha.pth')
         torch.save(state, model_path)
     
     print('End of model training. Trained model exported to: ', model_path)

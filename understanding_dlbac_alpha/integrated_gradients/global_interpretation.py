@@ -297,7 +297,7 @@ def main():
         milestones=optim_config['milestones'],
         gamma=optim_config['lr_decay'])
     
-    model_path = os.path.join(outdir, 'model_state.pth')
+    model_path = os.path.join('neural_network', 'dlbac_alpha.pth')
     train_load_save_model(model, model_path)
     model.eval()
     

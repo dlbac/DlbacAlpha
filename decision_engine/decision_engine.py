@@ -50,7 +50,7 @@ def parse_args():
         ('uid', args.uid),
         ('rid', args.rid),
         ('operation', args.operation),
-        ('outdir', 'result'),
+        ('outdir', 'neural_network'),
         ('data', args.data),
         ('debug', args.debug),
         ('model_name', 'dlbac_alpha.hdf5'),

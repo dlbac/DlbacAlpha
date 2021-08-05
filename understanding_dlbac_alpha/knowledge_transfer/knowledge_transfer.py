@@ -47,7 +47,6 @@ def parse_args():
     parser.add_argument('--train_data', type=str, required=True)
     parser.add_argument('--test_data', type=str, required=True)
     parser.add_argument('--max_depth', type=int, default=8)
-    parser.add_argument('--model_name', type=str, default='dlbac_alpha.hdf5')
     parser.add_argument('--debug', type=str2bool, default=False)
 
     args = parser.parse_args()
@@ -57,7 +56,6 @@ def parse_args():
         ('test_data', args.test_data),
         ('max_depth', args.max_depth),
         ('outdir', 'result'),
-        ('model_name', args.model_name),
         ('debug', args.debug),
     ])
 
@@ -156,7 +154,7 @@ def main():
         print('y_train shape after return:', y_train.shape)
    
     
-    model_path = os.path.join(outdir, config['model_name'])
+    model_path = os.path.join('neural_network', 'dlbac_alpha.hdf5')
     
     if os.path.exists(model_path):
         print('Loading trained model from {}.'.format(model_path))

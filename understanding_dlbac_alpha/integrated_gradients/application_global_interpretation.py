@@ -341,7 +341,7 @@ def main():
         criterion = nn.CrossEntropyLoss(size_average=True)
 
     	# evaluate the performance
-        model_path = os.path.join(outdir, 'model_state.pth')
+        model_path = os.path.join('neural_network', 'dlbac_alpha.pth')
         train_load_save_model(model, model_path)
         model.eval()
         accuracy = test(1, model, criterion, test_loader, run_config)
