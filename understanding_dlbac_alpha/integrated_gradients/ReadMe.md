@@ -12,7 +12,7 @@ _For IngratedGradients experiments, we used **captum** library. The library work
 
 _We implement DLBAC_alpha in PyTorch for a single operation (we experimented with op1). We need to train DLBAC_alpha once only. The same trained network can be used for both local and global interpretation. A trained DLBAC_alpha (model_state.pth) is added in the /result directory._
 
-resnet.py file contain pytorch implementation of ResNet.
+resnet.py file contains pytorch implementation of ResNet.
 dataloader.py is the utility file for processing data.
 
 
@@ -30,9 +30,8 @@ For example,
 python3 dlbac_alpha_training.py --train_data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/synthetic/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
 
 ### Output ###
-The **output** will be a *trained dlbac_alpha network* and saved in model_state.pth path.  
-The system keeps track of all the configurations and stores them in a result/config.json file.  
-The output file and configuration will be exported in the /result directory.
+The **output** will be a *trained dlbac_alpha network* and saved in `result/model_state.pth` path.  
+The system keeps track of all the configurations and stores them in a `result/config.json` file.  
 
 
 ## _Local Interpretation_ ##
