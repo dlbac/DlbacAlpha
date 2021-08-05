@@ -10,13 +10,13 @@ _For IngratedGradients experiments, we used **captum** library. The library work
 # Run #
 ## _Model Training_ ##
 
-_We implement DLBAC_alpha in PyTorch for a single operation (we experimented with op1). We need to train DLBAC_alpha once only. The same trained network can be used for both local and global interpretation. A trained DLBAC_alpha (model_state.pth) is added in the /result directory._
+_We implement DLBAC_alpha in PyTorch for a single operation (we experimented with op1). We need to train DLBAC_alpha once only. The same trained network can be used for both local and global interpretation. A trained DLBAC_alpha (dlbac_alpha.pth) is added in the `neural_network/` directory._
 
-resnet.py file contains pytorch implementation of ResNet.
-dataloader.py is the utility file for processing data.
+`resnet.py` file contains pytorch implementation of ResNet.
+`dataloader.py` is the utility file for processing data.
 
 
-dlbac_alpha_training.py file contains all the source code related to the DLBAC_alpha training.
+`dlbac_alpha_training.py` file contains all the source code related to the DLBAC_alpha training.
 
 This python script has two required parameters. --train_data (training dataset file path) and --test_data (test dataset file path).
 
@@ -36,7 +36,7 @@ The system keeps track of all the configurations and stores them in a `result/co
 
 ## _Local Interpretation_ ##
 
-Local interpretation works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
+Local interpretation works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `neural_network/` directory.
 
 `local_interpretation.py` file contains all the source code related to local interpretation (understanding decision of a single sample).
 
@@ -58,7 +58,7 @@ The output file will be exported in the result/local_interpret_result.txt file.
 
 ## _Global Interpretation_ ##
 
-Global interpretation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
+Global interpretation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `neural_network/` directory.
 
 `global_interpretation.py` file includes all the source code related to global interpretation (understanding decision of a batch of samples together). We evaluated the global interpretation for a batch of a maximum of 50 samples.
 
@@ -80,7 +80,7 @@ The output file will be exported in the `result/global_interpret_result.txt` fil
 
 ## _Application of Global Interpretation_ ##
 
-This experimentation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `/neural_network` directory.
+This experimentation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `neural_network/` directory.
 
 `application_global_interpretation.py` file contains all the source code related to global interpretation application experimentation (to see the impact of changing metadata values).  
 
