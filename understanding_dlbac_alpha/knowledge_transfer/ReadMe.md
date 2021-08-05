@@ -12,18 +12,18 @@
 
 # Run #
 
-_Knowledge Transferring technique first load a trained DLBAC_alpha network. We assume the network will be stored in the `result/` directory._
+_Knowledge Transferring technique first load a trained DLBAC_alpha network (dlbac_alpha.hdf5). We assume the network will be stored in the `neural_network/` directory._
 
 `knowledge_transfer.py` file contains all the source code related to _Knowledge Transferring_ experiment.
 
 This python script has two required parameters. --train_data (training dataset file path) and --test_data (test dataset file path).
 
-There are also three other optional parameters.
+There are also two other optional parameters.
 
 --max_depth (type: int. The maximum depth of the Decision Tree, the default value is 8). 
 It is an optional parameter for the Decision Tree to limit the way the tree grows.
 We experimented with various depth. For better visualization and moderate sized tree, we use max_depth=8.  
---model_name (type: String. The name of the trained DLBAC_alpha network, the default name is dlbac_alpha.hdf5).  
+
 --debug (type: bool. Display the detailed logs, default False).  
 
 For example,
