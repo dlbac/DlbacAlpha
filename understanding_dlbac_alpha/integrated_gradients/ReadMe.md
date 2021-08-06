@@ -2,7 +2,9 @@ _For IngratedGradients experiments, we used **captum** library. The library work
 
 ## Dependent Libraries ##
   * python 3.8 (experimented with version 3.8.10)
-  * Pytorch 1.5.0
+  * Pytorch 1.5.0 (https://pytorch.org/get-started/previous-versions/#linux-and-windows-11  
+For CPU: 
+pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html)
   * tensorflow (experimented with version 2.2.0)
   * numpy (experimented with version 1.20.3)
   * captum 0.3.1
@@ -48,7 +50,7 @@ There are also three other optional parameters.
 --index (type: int. The sample index in the dataset, the default value is 1). For simplicity, we take an index of the sample as the input, which is equivalent to taking both _uid_ of a user and _rid_ a resource as input. Based on the index, the internal system determines _uid_ and _rid_. Then, it retrieves their access to the corresponding operation.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 local_interpretation.py --data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --index 1
+For example, python3 local_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --index 1
 
 
 ### Output ###
@@ -70,7 +72,7 @@ There are also three other optional parameters.
 --batch_size (type: int. The size of the batch, the default value is 50). We experimented for a maximum batch size of 50.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 global_interpretation.py --data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --batch_size 20
+For example, python3 global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_grant.sample 
 
 
 ### Output ###
@@ -92,7 +94,7 @@ There are also two other optional parameters.
 --depth (type: int. Determine the layers of the ResNet network, the default value is 8. The depth of the network has to be the same as the stored network).  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 application_global_interpretation.py --data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
+For example, python3 application_global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
 
 
 ### Output ###
