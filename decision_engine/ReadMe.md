@@ -1,8 +1,7 @@
 ## Dependent Libraries ##
-  * python 3.8 (experimented with version 3.8.10)
+  * python3 (experimented with version 3.8.10)
   * keras 2.5.0
   * tensorflow (experimented with version 2.5.0)
-  * numpy (experimented with version 1.19.5)
 
 # Run #
 
