@@ -74,10 +74,11 @@ def data_parser(config):
     # load the dataset
     raw_dataset = loadtxt(dataFileName, delimiter=' ', dtype=str)
     
-    pairs_count = raw_dataset.shape[1]
+    tuples_count = raw_dataset.shape[0]
+
     found = False
     # get index based on uid and rid
-    for tuple_index in range(pairs_count):
+    for tuple_index in range(tuples_count):
         if raw_dataset[tuple_index, 0] == uid and raw_dataset[tuple_index, 1] == rid:
             found = True
             if debug:

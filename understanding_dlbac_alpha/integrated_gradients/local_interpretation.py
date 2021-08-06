@@ -52,7 +52,8 @@ def parse_args():
 
     parser.add_argument('--data', type=str, required=True)
     parser.add_argument('--depth', type=int, default=8)
-    parser.add_argument('--index', type=int, default=1)
+    parser.add_argument('--uid', type=str, required=True)
+    parser.add_argument('--rid', type=str, required=True)
     parser.add_argument('--debug', type=str2bool, default=False)
 
     args = parser.parse_args()
@@ -68,7 +69,7 @@ def parse_args():
 
     optim_config = OrderedDict([
         ('epochs', 0),
-        ('batch_size', 16),
+        ('batch_size', 100),
         ('base_lr', 1e-3),
         ('weight_decay', 1e-4),
         ('milestones', json.loads('[20, 30, 40]')),
@@ -78,7 +79,9 @@ def parse_args():
     data_config = OrderedDict([
         ('train_data', args.data),
         ('test_data', args.data),
-        ('sample_index', args.index),
+        ('uid', args.uid),
+        ('rid', args.rid),
+        ('debug', args.debug),
     ])
 
     run_config = OrderedDict([
@@ -162,14 +165,34 @@ def data_parser(data_config):
     
     trainDataFileName = data_config['train_data']
     testDataFileName = data_config['test_data']
+    uid = data_config['uid']
+    rid = data_config['rid']
+    debug = data_config['debug']
+    if debug:
+        print('uid=%s and rid=%s' % (uid, rid))
 
     cols = id_count + (metadata_count * 2) + ops_count # <uid rid><8 user-meta and 8 resource-meta><1 ops>
 
-    # load the training dataset
-    train_raw_dataset = loadtxt(trainDataFileName, delimiter=' ', dtype=np.str)
-    train_dataset = train_raw_dataset[:,2:cols] # TO SKIP UID RID
+    # load the dataset
+    train_raw_dataset = loadtxt(trainDataFileName, delimiter=' ', dtype=str)
+    
+    tuples_count = train_raw_dataset.shape[0]
+    if debug:
+        print('Number of tuples in the dataset', tuples_count)
+    found = False
+    # get index based on uid and rid
+    for tuple_index in range(tuples_count):
+        if train_raw_dataset[tuple_index, 0] == uid and train_raw_dataset[tuple_index, 1] == rid:
+            found = True
+            if debug:
+                print('The user and resource pair found in index: %d\n' % (tuple_index))
+            break
+    if not found:
+        if debug:
+            logger.info('The user and resource pair doesn`t exist in the dataset.')
+        exit(0)
 
-    np.random.shuffle(train_dataset)
+    train_dataset = train_raw_dataset[:,2:cols] # TO SKIP UID RID
 
     feature = train_dataset.shape[1]
     if debug:
@@ -180,11 +203,8 @@ def data_parser(data_config):
     train_operations = train_dataset[:,metadata:feature]
     train_operations = train_operations.astype('float16')
 
-    # load the testing dataset
-    test_raw_dataset = loadtxt(testDataFileName, delimiter=' ', dtype=np.str)
+    test_raw_dataset = loadtxt(testDataFileName, delimiter=' ', dtype=str)
     test_dataset = test_raw_dataset[:,2:cols] # TO SKIP UID RID
-
-    np.random.shuffle(test_dataset)
 
     test_urp = test_dataset[:,0:metadata]
     test_operations = test_dataset[:,metadata:feature]
@@ -194,7 +214,6 @@ def data_parser(data_config):
         print(train_urp[0])
         print(train_operations[0])
 
-    ############### ENCODING ##############
     train_urp = to_categorical(train_urp)
     if debug:
         print('shape of Train-URP after encoding')
@@ -204,7 +223,6 @@ def data_parser(data_config):
     if debug:
         print('shape of Test-URP after encoding')
         print(test_urp.shape)
-    ############### End of Encoding #######
 
     x_train = train_urp
     x_test = test_urp
@@ -220,7 +238,7 @@ def data_parser(data_config):
         print(x_test.shape[0], 'test samples')
         print('y_train shape:', y_train.shape)
 
-    return x_train, x_test, y_train, y_test
+    return x_train, x_test, y_train, y_test, tuple_index
 
 
 def train_load_save_model(model_obj, model_path):
@@ -262,7 +280,7 @@ def main():
     with open(outpath, 'w') as fout:
         json.dump(config, fout, indent=2)
 
-    x_train, x_test, y_train, y_test = data_parser(data_config)
+    x_train, x_test, y_train, y_test, tuple_index = data_parser(data_config)
     if debug:
         print('x_train shape after return:', x_train.shape)
         print('y_train shape after return:', y_train.shape)
@@ -276,7 +294,12 @@ def main():
     if debug:
         print('model config input shape', model_config['input_shape'])
 
-    train_loader, test_loader = get_loader(optim_config['batch_size'],
+    # determine batch size: we will create batch in way so that our desired 
+    # tuple belongs to the first batch (to avoid iteration over data_loader).
+    batch_size = max(optim_config['batch_size'], (tuple_index + 1))
+    if debug:
+        print('batch size:', batch_size)
+    train_loader, test_loader = get_loader(batch_size,
                                            x_train, x_test, y_train, y_test)
 
     if debug:
@@ -284,7 +307,8 @@ def main():
     
     model = load_model(config['model_config'])
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
-    logger.info('n_params: {}'.format(n_params))
+    if debug:
+        logger.info('n_params: {}'.format(n_params))
 
     criterion = nn.CrossEntropyLoss(size_average=True)
 
@@ -303,9 +327,8 @@ def main():
     model.eval()
 
     # as interpretation experiment is not related to training, we
-    # create both train_loader and test_loader to keep overall code reusable.
+    # create both train_loader and test_loader to keep overal code structure same.
     # Here, both train_loader and test_loader contain same data (we take only one dataset as input). 
-    # We experimented with samples from training dataset set.
     dataloader_iterator = iter(train_loader)
 
     integrated_gradients = IntegratedGradients(model)
@@ -316,10 +339,8 @@ def main():
     testdata, targets = next(dataloader_iterator)
     samples = len(testdata)
     
-    sample_index = data_config['sample_index']
-    
     # adding a dummy shape(for batch size) as there is only one sample as input
-    input_data = testdata[sample_index].reshape((1,)+testdata[sample_index].shape)
+    input_data = testdata[tuple_index].reshape((1,)+testdata[tuple_index].shape)
     
     outputs = model(input_data.float())
     if debug:
@@ -342,7 +363,10 @@ def main():
     result_file_path = os.path.join(outdir, 'local_interpret_result.txt')
     result_file = open(result_file_path, 'w+')
     
-    result_file.write('Index of the sample for local interpretation:%d\n\n' % (sample_index))
+    if pred_label_idx[0][0] == 1:
+        result_file.write('\nThe local interpretation of a tuple with uid=%s, rid=%s, and `grant` access to op1.\n\n' % (data_config['uid'], data_config['rid']))
+    else:
+        result_file.write('\nThe local interpretation of a tuple with uid=%s, rid=%s, and `deny` access to op1.\n\n' % (data_config['uid'], data_config['rid']))
     
     if debug:
         print('\nRaw attribution information.\n')

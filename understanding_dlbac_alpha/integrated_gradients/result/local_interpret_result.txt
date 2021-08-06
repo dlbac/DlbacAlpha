@@ -1,0 +1,40 @@
+
+The local interpretation of a tuple with uid=3660, rid=3878, and `grant` access to op1.
+
+
+Raw attribution information.
+umeta0 attribution: 0.43330885399309094
+umeta1 attribution: 0.0
+umeta2 attribution: 0.0
+umeta3 attribution: 2.437532439010999
+umeta4 attribution: 1.1818090366635186
+umeta5 attribution: 0.0
+umeta6 attribution: 0.0
+umeta7 attribution: 0.0
+rmeta0 attribution: 0.8726930247449918
+rmeta1 attribution: 0.5898728912568969
+rmeta2 attribution: 0.0
+rmeta3 attribution: 1.0412097539367067
+rmeta4 attribution: 2.804482703667535
+rmeta5 attribution: 1.7013032168469537
+rmeta6 attribution: 1.2641130719779086
+rmeta7 attribution: 0.0
+
+
+Normalized attribution information.
+umeta0 attribution: 0.15450580366441036
+umeta1 attribution: 0.0
+umeta2 attribution: 0.0
+umeta3 attribution: 0.8691558110960498
+umeta4 attribution: 0.42140000903482816
+umeta5 attribution: 0.0
+umeta6 attribution: 0.0
+umeta7 attribution: 0.0
+rmeta0 attribution: 0.3111778951618193
+rmeta1 attribution: 0.21033215519050852
+rmeta2 attribution: 0.0
+rmeta3 attribution: 0.3712662419258549
+rmeta4 attribution: 1.0
+rmeta5 attribution: 0.6066370866263825
+rmeta6 attribution: 0.4507473233209023
+rmeta7 attribution: 0.0

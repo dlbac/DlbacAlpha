@@ -78,6 +78,7 @@ def parse_args():
     data_config = OrderedDict([
         ('train_data', args.data),
         ('test_data', args.data),
+        ('debug', args.debug),
     ])
 
     run_config = OrderedDict([
@@ -161,6 +162,7 @@ def data_parser(data_config):
     
     trainDataFileName = data_config['train_data']
     testDataFileName = data_config['test_data']
+    debug = data_config['debug']
 
     cols = id_count + (metadata_count * 2) + ops_count # <uid rid><8 user-meta and 8 resource-meta><1 ops>
 
