@@ -1,0 +1,36 @@
+{
+  "model_config": {
+    "arch": "resnet",
+    "block_type": "basic",
+    "depth": 8,
+    "base_channels": 16,
+    "input_shape": [
+      1,
+      3,
+      32,
+      32
+    ],
+    "n_classes": 2
+  },
+  "optim_config": {
+    "epochs": 0,
+    "batch_size": 50,
+    "base_lr": 0.001,
+    "weight_decay": 0.0001,
+    "milestones": [
+      20,
+      30,
+      40
+    ],
+    "lr_decay": 0.1
+  },
+  "data_config": {
+    "train_data": "dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_grant.sample",
+    "test_data": "dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_grant.sample"
+  },
+  "run_config": {
+    "seed": 17,
+    "outdir": "result",
+    "debug": false
+  }
+}

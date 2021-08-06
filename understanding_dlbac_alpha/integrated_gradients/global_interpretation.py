@@ -168,7 +168,7 @@ def data_parser(data_config):
     train_raw_dataset = loadtxt(trainDataFileName, delimiter=' ', dtype=np.str)
     train_dataset = train_raw_dataset[:,2:cols] # TO SKIP UID RID
 
-    np.random.shuffle(train_dataset)
+    #np.random.shuffle(train_dataset)
 
     feature = train_dataset.shape[1]
     if debug:
@@ -283,7 +283,9 @@ def main():
     
     model = load_model(config['model_config'])
     n_params = sum([param.view(-1).size()[0] for param in model.parameters()])
-    logger.info('n_params: {}'.format(n_params))
+    
+    if debug:
+        logger.info('n_params: {}'.format(n_params))
 
     criterion = nn.CrossEntropyLoss(size_average=True)
 
@@ -328,13 +330,13 @@ def main():
     if debug:
         print('shape of squz', squz.shape)
 
-    rows = squz.shape[0]
-    cols = squz.shape[1]
+    rows = squz.shape[1]
+    cols = squz.shape[2]
     
     for row in range(rows):
         for col in range(cols):
             if squz[0][row][col] > 0:
-                aig[0][row] = squz[0][row][col]
+                aig[0][row] += squz[0][row][col]
     
     result_file_path = os.path.join(outdir, 'global_interpret_result.txt')
     result_file = open(result_file_path, 'w+')

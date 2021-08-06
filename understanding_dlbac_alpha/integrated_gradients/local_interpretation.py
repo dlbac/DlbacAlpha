@@ -337,7 +337,7 @@ def main():
     for row in range(rows):
         for col in range(cols):
             if squz[row][col] > 0:
-                aig[0][row] = squz[row][col]
+                aig[0][row] += squz[row][col]
     
     result_file_path = os.path.join(outdir, 'local_interpret_result.txt')
     result_file = open(result_file_path, 'w+')
