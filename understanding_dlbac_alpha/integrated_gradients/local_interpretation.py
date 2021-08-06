@@ -22,7 +22,7 @@ import torchvision.utils
 from dataloader import get_loader
 
 from numpy import loadtxt
-from tensorflow.python.keras.utils import to_categorical
+from tensorflow.keras.utils import to_categorical
 
 from os import path
 

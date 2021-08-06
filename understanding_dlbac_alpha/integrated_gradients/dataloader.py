@@ -9,8 +9,6 @@ import torchvision
 import torchvision.models
 import torchvision.transforms
 
-import pandas as pd
-
 from torch.utils.data import DataLoader, Dataset
 from numpy import loadtxt
 
