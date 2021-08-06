@@ -42,20 +42,19 @@ Local interpretation works based on a trained DLBAC_alpha network (dlbac_alpha.p
 
 `local_interpretation.py` file contains all the source code related to local interpretation (understanding decision of a single sample).
 
-This python script has the required parameters. `--data` (dataset file path).
+This python script has three required parameters. `--data` (dataset file path), `--uid` (unique id of a user), and `--rid` (unique id of a resource). As this experiment is for _op1_, based on _uid_ and _rid_, the system determines the user's access to the corresponding resource. 
 
-There are also three other optional parameters.
+There are also two other optional parameters.
 
 --depth (type: int. Determine the layers of the ResNet network, the default value is 8. The depth of the network has to be the same as the stored network).  
---index (type: int. The sample index in the dataset, the default value is 1). For simplicity, we take an index of the sample as the input, which is equivalent to taking both _uid_ of a user and _rid_ a resource as input. Based on the index, the internal system determines _uid_ and _rid_. Then, it retrieves their access to the corresponding operation.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 local_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --index 1
-
+For example, following command determines the local interpretation of a tuple with uid=3660, rid=3878, and `grant` access to op1 operation.  
+python3 local_interpretation.py --data dataset/u4k-r4k-auth11k/u4k-r4k-auth11k.sample --uid 3660 --rid 3878 
 
 ### Output ###
-The script outputs attribution information for the corresponding sample.  
-The output file will be exported in the result/local_interpret_result.txt file.
+The script outputs attribution information (local interpretation) for the corresponding tuple.  
+The output file will be exported in the `result/local_interpret_result.txt` file.
 
 
 ## _Global Interpretation_ ##
@@ -64,7 +63,7 @@ Global interpretation also works based on a trained DLBAC_alpha network (dlbac_a
 
 `global_interpretation.py` file includes all the source code related to global interpretation (understanding decision of a batch of samples together). We evaluated the global interpretation for a batch of a maximum of 50 samples.
 
-This python script has the required parameters. --data (dataset file path).
+This python script has the required parameters. `--data` (dataset file path).
 
 There are also three other optional parameters.
 
@@ -72,8 +71,8 @@ There are also three other optional parameters.
 --batch_size (type: int. The size of the batch, the default value is 50). We experimented for a maximum batch size of 50.  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_grant.sample 
-
+For example, following command determines the global interpretation for tuples with grant access.  
+python3 global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_grant.sample  
 
 ### Output ###
 The script outputs attribution information for the corresponding batch.  
