@@ -1,11 +1,9 @@
 
 ## Dependent Libraries ##
-  * python 3.8 (experimented with version 3.8.10)
+  * python3 (experimented with version 3.8.10)
   * keras 2.5.0
   * tensorflow (experimented with version 2.5.0)
-  * numpy (experimented with version 1.19.5)
   * scikit-learn (experimented with version 0.24.2)
-
   * IPython (experimented with version 7.26.0)
   * pydotplus (experimented with version 2.0.2)
   * graphviz (required to install with commad _`sudo apt-get install graphviz`_)
@@ -27,7 +25,7 @@ We experimented with various depth. For better visualization and moderate sized 
 --debug (type: bool. Display the detailed logs, default False).  
 
 For example,
-python3 knowledge_transfer.py --train_data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/synthetic/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
+python3 knowledge_transfer.py --train_data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
 
 ### Output ###
 The **output** will be a *Decision Tree* and saved in `result/dlbac_alpha_decision_tree.png` path.  
