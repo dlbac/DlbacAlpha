@@ -5,7 +5,7 @@ _For IngratedGradients experiments, we used **captum** library. The library work
   * Pytorch 1.5.0 (https://pytorch.org/get-started/previous-versions/#linux-and-windows-11  
 For CPU: 
 pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html)
-  * tensorflow (experimented with version 2.2.0)
+  * tensorflow  2.2 or above (experimented with version 2.5.0)
   * numpy (experimented with version 1.20.3)
   * captum 0.3.1
 
