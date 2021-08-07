@@ -1,0 +1,5 @@
+train data file name:dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample
+test data file name:dataset/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
+Test loss:0.084854
+Test accuracy:0.984375
+TN: 4746, FP: 87, FN: 50, TP: 3885
