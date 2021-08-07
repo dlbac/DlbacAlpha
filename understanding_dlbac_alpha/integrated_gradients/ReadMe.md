@@ -1,7 +1,7 @@
 _For IngratedGradients experiments, we used **captum** library. The library works only for the models implemented in **PyTorch**. Also, we provide understanding for a specific operation. E.g., Alice has op1 access to projectA resource. Hence, to keep it simple, we implement DLBAC_alpha for a single operation (as opposed to four operations in our DLBAC_alpha network experimentation section) using PyTorch compatible with the captum library._
 
 ## Dependent Libraries ##
-  * python 3.8 (experimented with version 3.8.10)
+  * python 3.6 or above (experimented with version 3.8.10)
   * Pytorch 1.5.0 (https://pytorch.org/get-started/previous-versions/#linux-and-windows-11  
 For CPU: 
 pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html)
