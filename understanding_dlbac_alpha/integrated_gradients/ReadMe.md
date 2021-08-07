@@ -14,6 +14,7 @@ pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.
 
 _We implement DLBAC_alpha in PyTorch for a single operation (we experimented with op1). We need to train DLBAC_alpha once only. The same trained network can be used for both local and global interpretation. A trained DLBAC_alpha (dlbac_alpha.pth) is added in the `neural_network/` directory._
 
+
 `resnet.py` file contains pytorch implementation of ResNet.
 `dataloader.py` is the utility file for processing data.
 
@@ -34,6 +35,8 @@ python3 dlbac_alpha_training.py --train_data dataset/u4k-r4k-auth11k/train_u4k-r
 ### Output ###
 The **output** will be a *trained dlbac_alpha network* and saved in `neural_network/dlbac_alpha.pth` path.  
 The system keeps track of all the configurations and stores them in a `result/config.json` file.  
+
+**Required Time:** _About 1 hour_  
 
 
 ## _Local Interpretation_ ##
