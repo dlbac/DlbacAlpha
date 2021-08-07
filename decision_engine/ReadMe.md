@@ -1,7 +1,7 @@
 ## Dependent Libraries ##
   * python3 (experimented with version 3.8.10)
   * keras 2.5.0
-  * tensorflow (experimented with version 2.5.0)
+  * tensorflow 2.2 or above (experimented with version 2.5.0)
 
 # Run #
 
