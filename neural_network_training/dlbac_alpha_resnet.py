@@ -315,15 +315,15 @@ g_tp = 0
 # Measure True Positive/ Negative, False Positive/ Negative for each operation, 
 # then combine it to measure actual counts
 # we calculate the FPR, FNR offline
-
+print('True Positive/ Negative, False Positive/ Negative Information')
 for i in range(4):
   tn, fp, fn, tp = confusion_matrix(y_test[:, i:i+1], y_preds[:, i:i+1]).ravel()
-  print('tn: %s, fp: %s, fn: %s, tp: %s', tn, fp, fn, tp)
+  print('op%d  # tn: %s, fp: %s, fn: %s, tp: %s' % (i+1, tn, fp, fn, tp))
   g_tn = g_tn + tn
   g_fp = g_fp + fp
   g_fn = g_fn + fn
   g_tp = g_tp + tp
-print('gtn: %s, gfp: %s, gfn: %s, gtp: %s', g_tn, g_fp, g_fn, g_tp)
+print('All operations # tn: %s, fp: %s, fn: %s, tp: %s' % (g_tn, g_fp, g_fn, g_tp))
 result_file.write('TN: %s, FP: %s, FN: %s, TP: %s' % (g_tn, g_fp, g_fn, g_tp))
 result_file.close()
 
