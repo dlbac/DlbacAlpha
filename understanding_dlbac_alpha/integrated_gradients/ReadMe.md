@@ -10,7 +10,7 @@ pip install torch==1.5.0+cpu torchvision==0.6.0+cpu -f https://download.pytorch.
   * captum 0.3.1
 
 # Run #
-## _Model Training_ ##
+## _Training DLBAC_alpha Network_ ##
 
 _We implement DLBAC_alpha in PyTorch for a single operation (we experimented with op1). We need to train DLBAC_alpha once only. The same trained network can be used for both local and global interpretation. A trained DLBAC_alpha (dlbac_alpha.pth) is added in the `neural_network/` directory._
 
