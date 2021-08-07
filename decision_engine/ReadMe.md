@@ -10,7 +10,7 @@ We assume the network is stored in the `neural_network/` directory._
 
 `decision_engine.py` file contains all the source code related to _Decision Engine_.
 
-This python script has three required parameters. --uid (unique id of a user), --rid (unique id of a resource), and --operation (name of the operation for which user requested access). For the sake of simplicity, we assume the uid and rid will be chosen from the tuples already available in the dataset.
+This python script has three required parameters. --uid (unique id of a user), --rid (unique id of a resource), and --operation (name of the operation `op1, op2, op3, or op4` for which user requested access). For the sake of simplicity, we assume the uid and rid will be chosen from the tuples already available in the dataset.
 
 There are also two other optional parameters.
 
