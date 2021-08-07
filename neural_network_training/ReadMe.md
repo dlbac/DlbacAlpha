@@ -14,8 +14,8 @@ For example, following command will build a trained dlbac_alpha network for the 
 python3 dlbac_alpha_resnet.py ../dataset/train_u4k-r4k-auth11k.sample ../dataset/test_u4k-r4k-auth11k.sample 
 
 ## Output ##
-The **output** will be a *trained dlbac_alpha network* and saved in dlbac_alpha.hdf5 file. 
+The **output** will be a *trained dlbac_alpha network* and saved in dlbac_alpha.hdf5 file.  
+The training history and training results will be stored in history_dlbac_aplha and results.txt files, respectively.  
+All the trained network and all other files will be exported in the `results/` directory.  
 
-The training history and training results will be stored in history_dlbac_aplha and results.txt files, respectively. 
-
-All the trained network and all other files will be exported in the `results/` directory.
+**Required Time:** _About 1 hour_  
