@@ -29,7 +29,7 @@ There are also three other optional parameters.
 --debug (type: bool. Display the detailed logs, default False).  
 
 For example,
-python3 dlbac_alpha_training.py --train_data dataset/synthetic/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/synthetic/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
+python3 dlbac_alpha_training.py --train_data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k.sample --test_data dataset/u4k-r4k-auth11k/test_u4k-r4k-auth11k.sample
 
 ### Output ###
 The **output** will be a *trained dlbac_alpha network* and saved in `neural_network/dlbac_alpha.pth` path.  
@@ -93,7 +93,8 @@ There are also two other optional parameters.
 --depth (type: int. Determine the layers of the ResNet network, the default value is 8. The depth of the network has to be the same as the stored network).  
 --debug (type: bool. Display the detailed logs, default False).  
 
-For example, python3 application_global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
+Following is a sample command for running this experiment.   
+python3 application_global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
 
 
 ### Output ###
