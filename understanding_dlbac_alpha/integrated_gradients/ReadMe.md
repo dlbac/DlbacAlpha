@@ -82,22 +82,22 @@ The script outputs attribution information for the corresponding batch.
 The output file will be exported in the `result/global_interpret_result.txt` file.
 
 
-## _Application of Global Interpretation_ ##
+## _Application of Integrated Gradients based Understanding_ ##
 
 This experimentation also works based on a trained DLBAC_alpha network (dlbac_alpha.pth). We assume the trained network is stored in `neural_network/` directory.
 
-`application_global_interpretation.py` file contains all the source code related to global interpretation application experimentation (to see the impact of changing metadata values).  
+`application_integrated_gradients.py` file contains all the source code related to _Integrated Gradients based understanding application_ experimentation (Section 5.1.1 in the paper).  
 
 This python script has the required parameters, --data (dataset file path). For this experiment, we split our train_u4k-r4k-auth11k.sample file into two different files based on the op1 access information. We create a train_u4k-r4k-auth11k_grant.sample that contains all the samples with grant access on op1 operation. For the rest of the samples, we create a train_u4k-r4k-auth11k_deny.sample file. Essentially, this **train_u4k-r4k-auth11k_deny.sample** is the input to the script. We provide both files in **dataset/synthetic/u4k-r4k-auth11k/** directory.  
 
-For changed value, we randomly select a tuple (uid:4246, rid:4435) with grant access on op1 and apply its corresponding metadata values.  
+We randomly select a tuple (uid:4246, rid:4435) with grant access on op1 and apply its corresponding metadata values for changed value.  
 
 There are also two other optional parameters.  
 --depth (type: int. Determine the layers of the ResNet network, the default value is 8. The depth of the network has to be the same as the stored network).  
 --debug (type: bool. Display the detailed logs, default False).  
 
 Following is a sample command for running this experiment.   
-python3 application_global_interpretation.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
+python3 application_integrated_gradients.py --data dataset/u4k-r4k-auth11k/train_u4k-r4k-auth11k_deny.sample
 
 
 ### Output ###
@@ -105,4 +105,4 @@ We evaluate for all the samples in train_u4k-r4k-auth11k_deny.sample.
 As all the samples (tuples) in train_u4k-r4k-auth11k_deny.sample datasets are with _deny_ access. Ideally, without any change, the accuracy should be as close as 100%. However, with the evolution of a different number of metadata values, this accuracy decreases, indicating the tuples are receiving grant access.  
 As such, we measure what percentage of tuples still have _deny_ access. We also measure what percentage of tuples are receiving _**grant**_ access with the change of their metadata values.
 
-The output file will be exported in the `result/application_global_interpret_result.txt` file.
+The output file will be exported in the `result/application_integrated_gradients_result.txt` file.
