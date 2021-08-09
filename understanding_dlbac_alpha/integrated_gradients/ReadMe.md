@@ -90,7 +90,7 @@ This experimentation also works based on a trained DLBAC_alpha network (dlbac_al
 
 This python script has the required parameters, --data (dataset file path). For this experiment, we split our train_u4k-r4k-auth11k.sample file into two different files based on the op1 access information. We create a train_u4k-r4k-auth11k_grant.sample that contains all the samples with grant access on op1 operation. For the rest of the samples, we create a train_u4k-r4k-auth11k_deny.sample file. Essentially, this **train_u4k-r4k-auth11k_deny.sample** is the input to the script. We provide both files in **dataset/synthetic/u4k-r4k-auth11k/** directory.  
 
-We randomly select a tuple (uid:4246, rid:4435) with grant access on op1 and apply its corresponding metadata values for changed value.  
+We randomly select a tuple (uid:4246, rid:4435) with grant access on op1 and apply its corresponding metadata values for changed value. We change metadata values in order of their significance level in the global interpretation (Figure 10 in the paper). E.g., first, we change the value of _rmeta2_ metadata.  
 
 There are also two other optional parameters.  
 --depth (type: int. Determine the layers of the ResNet network, the default value is 8. The depth of the network has to be the same as the stored network).  
