@@ -304,7 +304,7 @@ def main():
 
     max_metadata_change = 7
 
-    result_file_path = os.path.join(outdir, 'application_global_interpret_result.txt')
+    result_file_path = os.path.join(outdir, 'application_integrated_gradients_result.txt')
     result_file = open(result_file_path, 'w+')
 
     for no_of_changed_meta in range(max_metadata_change):
@@ -351,7 +351,7 @@ def main():
         result_file.write('Current percentage of tuples with deny access: %f \n' % (accuracy * 100))
         result_file.write('Percentage of tuples receiving grant access: %f \n\n' % ((1-accuracy) * 100))
 
-    print('The outputs of global interpretation experiment are exported to: %s' % (result_file_path))
+    print('The outputs of application of integrated gradients experiment are exported to: %s' % (result_file_path))
     result_file.close()
 
 
