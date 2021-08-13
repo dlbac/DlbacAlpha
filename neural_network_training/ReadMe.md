@@ -18,4 +18,4 @@ The **output** will be a *trained dlbac_alpha network* and saved in dlbac_alpha.
 The training history and training results will be stored in history_dlbac_aplha and results.txt files, respectively.  
 The trained network and all other files will be exported in the `results/` directory.  
 
-**Required Time:** _About 1 hour_  
+**Required Time:** _CPU: About 1 hour_  
