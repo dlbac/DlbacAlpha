@@ -36,7 +36,7 @@ python3 dlbac_alpha_training.py --train_data dataset/u4k-r4k-auth11k/train_u4k-r
 The **output** will be a *trained dlbac_alpha network* and saved in `neural_network/dlbac_alpha.pth` path.  
 The system keeps track of all the configurations and stores them in a `result/config.json` file.  
 
-**Required Time:** _About 1 hour_  
+**Required Time:** _CPU: About 1 hour_  
 
 
 ## _Local Interpretation_ ##
